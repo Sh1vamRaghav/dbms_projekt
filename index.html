@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link type="stylesheet">
+    <title>DBMS Projekt</title>
+</head>
+<body>
+    <h2>VACANT ROOM FINDER</h2>
+    <select id="roomType">
+        <option>Classroom</option>
+        <option>CS_Lab</option>
+        <option>Physics_Lab</option>
+    </select>
+    <input type="date" id="date">
+    <input type="number" id="slot" placeholder="Slot number">
+    <button onclick="getVacantRooms()">Check</button>
+
+    <div id="results"></div></body>
+    <script src="script.js"></script>
+</html>
