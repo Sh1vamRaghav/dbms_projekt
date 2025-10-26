@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="stylesheet">
-    <title>DBMS Projekt</title>
+    <title>Room Types</title>
 </head>
 <body>
-    <h2>VACANT ROOM FINDER</h2>
-    <select id="roomType">
-        <option>Classroom</option>
-        <option>CS_Lab</option>
-        <option>Physics_Lab</option>
-    </select>
-    <input type="date" id="date">
-    <input type="number" id="slot" placeholder="Slot number">
-    <button onclick="getVacantRooms()">Check</button>
+    <h1>Room Types</h1>
+    <button id="loadButton">Load Room Types</button>
+    <ul id="roomList"></ul>
 
-    <div id="results"></div></body>
-    <script src="script.js"></script>
+    <script>
+        const button = document.getElementById("loadButton");
+        const roomList = document.getElementById("roomList");
+
+        button.addEventListener("click", async () => {
+            try {
+                const response = await fetch("/v1/roomTypes");
+                const data = await response.json();
+
+                roomList.innerHTML = "";
+                data.forEach(r => {
+                    const li = document.createElement("li");
+                    li.textContent = `${r.room_type_id} - ${r.type_name}`;
+                    roomList.appendChild(li);
+                });
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load room types");
+            }
+        });
+    </script>
+</body>
 </html>
