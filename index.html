@@ -1,33 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Room Types</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timely</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Room Types</h1>
-    <button id="loadButton">Load Room Types</button>
-    <ul id="roomList"></ul>
+    <header>
+        <h1>Timely</h1>
+        <nav>
+            <button class="nav-btn active" data-section="students">Students</button>
+            <button class="nav-btn" data-section="faculty">Faculty</button>
+            <button class="nav-btn" data-section="admin">Admin</button>
+        </nav>
+    </header>
 
-    <script>
-        const button = document.getElementById("loadButton");
-        const roomList = document.getElementById("roomList");
+    <main id="content">
+        <!-- Default Section: Students -->
+        <section id="students" class="section visible">
+            <h2>Students</h2>
+            <div class="menu">
+                <button class="menu-item">📅 View Timetable</button>
+                <button class="menu-item">🏫 Find Vacant Room</button>
+            </div>
+        </section>
 
-        button.addEventListener("click", async () => {
-            try {
-                const response = await fetch("/v1/roomTypes");
-                const data = await response.json();
+        <section id="faculty" class="section">
+            <h2>Faculty</h2>
+            <div class="menu">
+                <button class="menu-item">📅 View Timetable</button>
+                <button class="menu-item">👨‍🏫 View Faculty Timetable</button>
+                <button class="menu-item">➕ Schedule Extra Class</button>
+                <button class="menu-item">❌ Delete Extra Class</button>
+                <button class="menu-item">🧑‍🎓 View Students List</button>
+                <button class="menu-item">🏫 Find Vacant Room</button>
+            </div>
+        </section>
 
-                roomList.innerHTML = "";
-                data.forEach(r => {
-                    const li = document.createElement("li");
-                    li.textContent = `${r.room_type_id} - ${r.type_name}`;
-                    roomList.appendChild(li);
-                });
-            } catch (err) {
-                console.error(err);
-                alert("Failed to load room types");
-            }
-        });
-    </script>
+        <section id="admin" class="section">
+            <h2>Admin</h2>
+            <div class="menu">
+                <button class="menu-item">📘 Manage Academic Terms</button>
+                <button class="menu-item">👩‍🏫 Manage Courses & Faculty</button>
+                <button class="menu-item">📊 View All Timetables</button>
+                <button class="menu-item">⏱ Manage Time Slots</button>
+                <button class="menu-item">🏢 Manage Rooms</button>
+                <button class="menu-item">🗓 Monitor Extra Classes</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Timely — Campus Scheduling Simplified</p>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
