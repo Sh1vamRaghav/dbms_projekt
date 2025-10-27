@@ -21,13 +21,13 @@
         <section id="students" class="section visible">
             <h2>Students</h2>
 
-            <!-- Step 1: Main menu -->
+            <!--Main menu -->
             <div id="students-menu" class="menu visible">
                 <button id="open-timetable" class="menu-item">📅 View Timetable</button>
                 <button class="menu-item">🏫 Find Vacant Room</button>
             </div>
 
-            <!-- Step 2: Timetable selection screen -->
+            <!-- Timetable selection screen -->
             <div id="timetable-form" class="hidden">
                 <h3>Select Batch and Year</h3>
                 <div class="inputs">
@@ -89,15 +89,79 @@
         <!-- Faculty Section -->
         <section id="faculty" class="section">
             <h2>Faculty</h2>
-            <div class="menu">
-                <button class="menu-item">📅 View Timetable</button>
-                <button class="menu-item">👨‍🏫 View Faculty Timetable</button>
+
+            <!-- Main Faculty Menu -->
+            <div id="faculty-menu" class="menu visible">
+                <button id="open-timetable" class="menu-item">📅 View Timetable</button>
+                <button class="menu-item" id="faculty-view-timetable">👨‍🏫 View Faculty Timetable</button>
                 <button class="menu-item">➕ Schedule Extra Class</button>
                 <button class="menu-item">❌ Delete Extra Class</button>
                 <button class="menu-item">🧑‍🎓 View Students List</button>
                 <button class="menu-item">🏫 Find Vacant Room</button>
             </div>
+
+            <!-- Faculty Timetable Form -->
+            <div id="faculty-timetable-form-container" class="hidden">
+                <h3>Select Faculty and Details</h3>
+
+                <form id="faculty-timetable-form">
+                    <label for="faculty-id">Faculty:</label>
+                    <select id="faculty-id" name="fid" required>
+                        <option value="">Select Faculty</option>
+                        <option value="13">Mrs. Geetanjali Bhola</option>
+                        <option value="18">Dr. Juhi Jain</option>
+                        <option value="23">Mr. Khushwant Sehra</option>
+                        <option value="30">Dr. Ranjeet Singh</option>
+                        <option value="31">Dr. Rekha</option>
+                        <option value="36">Dr. Sunil Kumar</option>
+                        <option value="40">Dr. Sweta</option>
+                    </select>
+
+                    <label for="batch">Batch:</label>
+                    <select id="batch" name="batch" required>
+                        <option value="">Select Batch</option>
+                        <option value="CSE-A">CSE-A</option>
+                        <option value="CSE-B">CSE-B</option>
+                        <option value="ECE-A">ECE-A</option>
+                        <option value="ECE-B">ECE-B</option>
+                        <option value="EE-A">EE-A</option>
+                        <option value="EE-B">EE-B</option>
+                    </select>
+
+                    <label for="year">Year:</label>
+                    <select id="year" name="year" required>
+                        <option value="">Select Year</option>
+                        <option value="2023">1st Year</option>
+                        <option value="2024">2nd Year</option>
+                        <option value="2025">3rd Year</option>
+                    </select>
+
+                    <label for="day">Day:</label>
+                    <select id="day" name="day">
+                        <option value="0">All Days</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                    </select>
+
+                    <div class="form-actions">
+                        <button type="submit" class="menu-item">View Timetable</button>
+                        <button type="button" id="back-to-faculty-menu" class="menu-item secondary">⬅ Back</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Faculty Timetable Results -->
+            <div id="faculty-timetable-container" class="hidden">
+                <h3>Faculty Timetable</h3>
+                <div id="faculty-timetable-grid"></div>
+                <button id="back-to-faculty-form" class="menu-item secondary">⬅ Back</button>
+            </div>
         </section>
+
 
         <!-- Admin Section -->
         <section id="admin" class="section">

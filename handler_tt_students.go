@@ -16,7 +16,7 @@ type TimetableEntry struct {
     EndTime       string `json:"end_time"`
 }
 
-func (apiCfg *apiConfig) handlerTimetableByBatchYear(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) handlerTimetableStudents(w http.ResponseWriter, r *http.Request) {
     batch := r.URL.Query().Get("batch")
     yearStr := r.URL.Query().Get("year")
     dayStr := r.URL.Query().Get("day")

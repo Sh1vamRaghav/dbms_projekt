@@ -61,7 +61,8 @@ func main() {
 
     // API routes
     v1 := chi.NewRouter()
-    v1.Get("/timetable", apiCfg.handlerTimetableByBatchYear)
+    v1.Get("/timetable", apiCfg.handlerTimetableStudents)
+    v1.Get("/faculty/timetable", apiCfg.handlerTimetableFaculty)
     router.Mount("/v1", v1)
 
     log.Printf("Server running on port %s\n", port)
