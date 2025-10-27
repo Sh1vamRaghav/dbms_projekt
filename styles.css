@@ -110,3 +110,79 @@ footer {
     font-size: 0.9rem;
     color: #94a3b8;
 }
+
+/* === Timetable Section === */
+.inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+select {
+    padding: 10px;
+    border-radius: var(--radius);
+    background-color: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+#timetable-container {
+    margin-top: 30px;
+    background-color: var(--surface);
+    border-radius: var(--radius);
+    padding: 20px;
+    border: 1px solid var(--border);
+}
+
+.hidden {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+}
+
+th {
+    background-color: var(--hover);
+    color: var(--accent);
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: var(--hover);
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.menu-item.secondary {
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--accent);
+}
+
+.menu-item.secondary:hover {
+    background-color: var(--hover);
+    color: var(--text);
+}

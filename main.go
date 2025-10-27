@@ -55,7 +55,9 @@ func main() {
     }))
 
     // Serve frontend
-    router.Handle("/", http.FileServer(http.Dir(".")))
+    fs := http.FileServer(http.Dir("."))
+    router.Handle("/*", fs)
+
 
     // API routes
     v1 := chi.NewRouter()

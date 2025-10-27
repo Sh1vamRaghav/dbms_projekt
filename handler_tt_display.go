@@ -1,9 +1,10 @@
 package main
 
 import (
-    "log"
-    "net/http"
-    "strconv"
+	"database/sql"
+	"log"
+	"net/http"
+	"strconv"
 )
 
 type TimetableEntry struct {
@@ -18,6 +19,7 @@ type TimetableEntry struct {
 func (apiCfg *apiConfig) handlerTimetableByBatchYear(w http.ResponseWriter, r *http.Request) {
     batch := r.URL.Query().Get("batch")
     yearStr := r.URL.Query().Get("year")
+    dayStr := r.URL.Query().Get("day")
 
     if batch == "" || yearStr == "" {
         respondWithError(w, 400, "Missing 'batch' or 'year' query parameter")
@@ -30,31 +32,59 @@ func (apiCfg *apiConfig) handlerTimetableByBatchYear(w http.ResponseWriter, r *h
         return
     }
 
-    query := `
-        SELECT 
-            timetable.course_id,
-            COALESCE(divisions.division_label, 'Combined Batch') AS division_label,
-            days.day_name,
-            timetable.room_id,
-            time_slots.start_time,
-            time_slots.end_time
-        FROM timetable
-        JOIN time_slots ON timetable.time_slot = time_slots.time_slot_id
-        JOIN days ON timetable.day_of_week = days.day_of_week
-        LEFT JOIN divisions ON timetable.division_id = divisions.division_id
-        JOIN batches ON timetable.batch_id = batches.batch_id
-        WHERE batches.batch_name = ? AND batches.admission_year = ?
-        ORDER BY timetable.day_of_week, time_slots.start_time;
-    `
+    day, err := strconv.Atoi(dayStr)
+    if err != nil{
+        respondWithError(w, 400, "Invalid day selected")
+        return
+    }
 
-    rows, err := apiCfg.DB.Query(query, batch, year)
+    var rows *sql.Rows
+    if day != 0{
+        query := `
+            SELECT 
+                timetable.course_id,
+                COALESCE(divisions.division_label, 'Combined Batch') AS division_label,
+                days.day_name,
+                timetable.room_id,
+                time_slots.start_time,
+                time_slots.end_time
+            FROM timetable
+            JOIN time_slots ON timetable.time_slot = time_slots.time_slot_id
+            JOIN days ON timetable.day_of_week = days.day_of_week
+            LEFT JOIN divisions ON timetable.division_id = divisions.division_id
+            JOIN batches ON timetable.batch_id = batches.batch_id
+            WHERE batches.batch_name = ? AND batches.admission_year = ? AND days.day_of_week = ?
+            ORDER BY timetable.day_of_week, time_slots.start_time;
+        `
+        rows, err = apiCfg.DB.Query(query, batch, year, day)
+    }else{
+        query := `
+            SELECT 
+                timetable.course_id,
+                COALESCE(divisions.division_label, 'Combined Batch') AS division_label,
+                days.day_name,
+                timetable.room_id,
+                time_slots.start_time,
+                time_slots.end_time
+            FROM timetable
+            JOIN time_slots ON timetable.time_slot = time_slots.time_slot_id
+            JOIN days ON timetable.day_of_week = days.day_of_week
+            LEFT JOIN divisions ON timetable.division_id = divisions.division_id
+            JOIN batches ON timetable.batch_id = batches.batch_id
+            WHERE batches.batch_name = ? AND batches.admission_year = ?
+            ORDER BY timetable.day_of_week, time_slots.start_time;
+        `
+        rows, err = apiCfg.DB.Query(query, batch, year)
+     }
+
+    
     if err != nil {
         log.Println("Query error:", err)
         respondWithError(w, 500, "Database query failed")
         return
     }
     defer rows.Close()
-
+    
     var timetable []TimetableEntry
     for rows.Next() {
         var t TimetableEntry

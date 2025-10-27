@@ -17,15 +17,76 @@
     </header>
 
     <main id="content">
-        <!-- Default Section: Students -->
+        <!-- Students Section -->
         <section id="students" class="section visible">
             <h2>Students</h2>
-            <div class="menu">
-                <button class="menu-item">📅 View Timetable</button>
+
+            <!-- Step 1: Main menu -->
+            <div id="students-menu" class="menu visible">
+                <button id="open-timetable" class="menu-item">📅 View Timetable</button>
                 <button class="menu-item">🏫 Find Vacant Room</button>
+            </div>
+
+            <!-- Step 2: Timetable selection screen -->
+            <div id="timetable-form" class="hidden">
+                <h3>Select Batch and Year</h3>
+                <div class="inputs">
+                    <select id="batch-select">
+                        <option value="">Select Batch</option>
+                        <option value="CSE-A">CSE-A</option>
+                        <option value="CSE-A">CSE-B</option>
+                        <option value="ECE-A">ECE-A</option>
+                        <option value="ECE-B">ECE-B</option>
+                        <option value="EE-A">EE-A</option>
+                        <option value="EE-B">EE-B</option>
+                    </select>
+
+                    <select id="year-select">
+                        <option value="">Select Year</option>
+                        <option value="2023">1<sup>st</sup></option>
+                        <option value="2024">2<sup>nd</sup></option>
+                        <option value="2025">3<sup>rd</sup></option>
+                    </select>
+                    <select id="day-select">
+                        <option value="0">Select Day</option>
+                        <option value="0">All</option>
+                        <option value="1">Monday</option>
+                        <option value="2">Tuesday</option>
+                        <option value="3">Wednesday</option>
+                        <option value="4">Thursday</option>
+                        <option value="5">Friday</option>
+                        <option value="6">Saturday</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button id="submit-timetable" class="menu-item">Submit</button>
+                    <button id="back-to-menu" class="menu-item secondary">⬅ Back</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Timetable view -->
+            <div id="timetable-container" class="hidden">
+                <h3>Your Timetable</h3>
+                <table id="timetable-table">
+                    <thead>
+                        <tr>
+                            <th>Course ID</th>
+                            <th>Division</th>
+                            <th>Day</th>
+                            <th>Room</th>
+                            <th>Start</th>
+                            <th>End</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button id="back-to-form" class="menu-item secondary">⬅ Back</button>
             </div>
         </section>
 
+
+        <!-- Faculty Section -->
         <section id="faculty" class="section">
             <h2>Faculty</h2>
             <div class="menu">
@@ -38,6 +99,7 @@
             </div>
         </section>
 
+        <!-- Admin Section -->
         <section id="admin" class="section">
             <h2>Admin</h2>
             <div class="menu">
