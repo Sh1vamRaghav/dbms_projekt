@@ -1,194 +1,206 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // === NAVIGATION BETWEEN TABS ===
-    const navButtons = document.querySelectorAll(".nav-btn");
-    const sections = document.querySelectorAll(".section");
+  // NAVIGATION
+  const navBtns = document.querySelectorAll(".nav-btn");
+  const sections = document.querySelectorAll(".section");
 
-    navButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-            navButtons.forEach(b => b.classList.remove("active"));
-            btn.classList.add("active");
+  navBtns.forEach((btn) =>
+    btn.addEventListener("click", () => {
+      navBtns.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      sections.forEach((s) => s.classList.remove("visible"));
+      document.getElementById(btn.dataset.section).classList.add("visible");
+    })
+  );
 
-            const target = btn.getAttribute("data-section");
-            sections.forEach(sec => {
-                sec.classList.toggle("visible", sec.id === target);
-            });
-        });
+  // STUDENT SECTION
+  const studentMenu = document.getElementById("students-menu");
+  const studentForm = document.getElementById("student-timetable-form");
+  const studentContainer = document.getElementById("student-timetable-container");
+
+  document.getElementById("open-student-timetable").onclick = () => {
+    studentMenu.classList.add("hidden");
+    studentForm.classList.remove("hidden");
+  };
+
+  document.getElementById("back-student-menu").onclick = () => {
+    studentForm.classList.add("hidden");
+    studentMenu.classList.remove("hidden");
+  };
+
+  document.getElementById("submit-student-timetable").onclick = async () => {
+    const batch = document.getElementById("student-batch").value;
+    const year = document.getElementById("student-year").value;
+    const day = document.getElementById("student-day").value;
+
+    const res = await fetch(`/v1/timetable?batch=${batch}&year=${year}&day=${day}`);
+    const data = await res.json();
+    const tbody = document.querySelector("#student-timetable-table tbody");
+    tbody.innerHTML = "";
+    data.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.course_id}</td>
+        <td>${row.division_label}</td>
+        <td>${row.day_name}</td>
+        <td>${row.room_id}</td>
+        <td>${row.start_time}</td>
+        <td>${row.end_time}</td>`;
+      tbody.appendChild(tr);
     });
 
-    // === STUDENTS SECTION LOGIC ===
-    const studentsMenu = document.getElementById("students-menu");
-    const timetableForm = document.getElementById("timetable-form");
-    const timetableContainer = document.getElementById("timetable-container");
-    const timetableBody = document.querySelector("#timetable-table tbody");
+    studentForm.classList.add("hidden");
+    studentContainer.classList.remove("hidden");
+  };
 
-    const openTimetableBtn = document.getElementById("open-timetable");
-    const backToMenuBtn = document.getElementById("back-to-menu");
-    const backToFormBtn = document.getElementById("back-to-form");
-    const submitTimetableBtn = document.getElementById("submit-timetable");
+  document.getElementById("back-student-form").onclick = () => {
+    studentContainer.classList.add("hidden");
+    studentForm.classList.remove("hidden");
+  };
 
-    const daySelect = document.getElementById("day-select");
-    const batchSelect = document.getElementById("batch-select");
-    const yearSelect = document.getElementById("year-select");
-
-    // Step 1: Open form
-    openTimetableBtn.addEventListener("click", () => {
-        studentsMenu.classList.add("hidden");
-        timetableForm.classList.remove("hidden");
-    });
-
-    // Step 2: Back to main menu
-    backToMenuBtn.addEventListener("click", () => {
-        timetableForm.classList.add("hidden");
-        studentsMenu.classList.remove("hidden");
-    });
-
-    // Step 3: Back from table to form
-    backToFormBtn.addEventListener("click", () => {
-        timetableContainer.classList.add("hidden");
-        timetableForm.classList.remove("hidden");
-    });
-
-    // Step 4: Submit form to get timetable
-    submitTimetableBtn.addEventListener("click", async () => {
-        const batch = batchSelect.value;
-        const year = yearSelect.value;
-        const day = daySelect.value;
-
-        if (!batch || !year) {
-            alert("Please select both batch and year.");
-            return;
-        }
-
-        try {
-            const res = await fetch(`/v1/timetable?batch=${batch}&year=${year}&day=${day}`);
-            if (!res.ok) {
-                alert("Failed to load timetable.");
-                return;
-            }
-
-            const data = await res.json();
-            timetableBody.innerHTML = "";
-
-            if (data.length === 0) {
-                timetableBody.innerHTML = `<tr><td colspan="6">No timetable found.</td></tr>`;
-            } else {
-                data.forEach(row => {
-                    const tr = document.createElement("tr");
-                    tr.innerHTML = `
-                        <td>${row.course_id}</td>
-                        <td>${row.division_label}</td>
-                        <td>${row.day_name}</td>
-                        <td>${row.room_id}</td>
-                        <td>${row.start_time}</td>
-                        <td>${row.end_time}</td>
-                    `;
-                    timetableBody.appendChild(tr);
-                });
-            }
-
-            timetableForm.classList.add("hidden");
-            timetableContainer.classList.remove("hidden");
-        } catch (err) {
-            console.error("Fetch error:", err);
-            alert("Error fetching timetable.");
-        }
-    });
-});
-
-// === FACULTY SECTION LOGIC ===
-document.addEventListener("DOMContentLoaded", () => {
+  // FACULTY SECTION
   const facultyMenu = document.getElementById("faculty-menu");
-  const facultyFormContainer = document.getElementById("faculty-timetable-form-container");
+  const facultyForm = document.getElementById("faculty-timetable-form-container");
   const facultyContainer = document.getElementById("faculty-timetable-container");
-  const facultyGrid = document.getElementById("faculty-timetable-grid");
+  const extraForm = document.getElementById("extra-class-form");
 
-  const openFacultyBtn = document.getElementById("faculty-view-timetable");
-  const backToFacultyMenu = document.getElementById("back-to-faculty-menu");
-  const backToFacultyForm = document.getElementById("back-to-faculty-form");
-
-  const form = document.getElementById("faculty-timetable-form");
-
-  // Open the form
-  openFacultyBtn.addEventListener("click", () => {
+  document.getElementById("open-faculty-timetable").onclick = () => {
     facultyMenu.classList.add("hidden");
-    facultyFormContainer.classList.remove("hidden");
-  });
+    facultyForm.classList.remove("hidden");
+  };
 
-  // Back to main faculty menu
-  backToFacultyMenu.addEventListener("click", () => {
-    facultyFormContainer.classList.add("hidden");
+  document.getElementById("back-faculty-menu").onclick = () => {
+    facultyForm.classList.add("hidden");
     facultyMenu.classList.remove("hidden");
-  });
+  };
 
-  // Back to form from results
-  backToFacultyForm.addEventListener("click", () => {
-    facultyContainer.classList.add("hidden");
-    facultyFormContainer.classList.remove("hidden");
-  });
+  document.getElementById("open-extra-class").onclick = () => {
+    facultyMenu.classList.add("hidden");
+    extraForm.classList.remove("hidden");
+  };
 
-  // Handle form submit
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  document.getElementById("back-extra").onclick = () => {
+    extraForm.classList.add("hidden");
+    facultyMenu.classList.remove("hidden");
+  };
 
-    const fid = document.getElementById("faculty-id").value;
-    const batch = document.getElementById("batch").value;
-    const year = document.getElementById("year").value;
-    const day = document.getElementById("day").value;
-
-    if (!fid || !batch || !year) {
-      alert("Please fill in all required fields.");
-      return;
-    }
-
-    const url = `/v1/faculty/timetable?fid=${fid}&batch=${batch}&year=${year}&day=${day}`;
-
+  // LOAD FACULTY DATA
+  async function loadFacultyData() {
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("Failed to fetch timetable");
+      const [facRes, courseRes, roomRes, slotRes] = await Promise.all([
+        fetch("/v1/faculty"),
+        fetch("/v1/courses"),
+        fetch("/v1/rooms"),
+        fetch("/v1/timeSlots")
+      ]);
 
-      const data = await res.json();
-      if (data.length === 0) {
-        facultyGrid.innerHTML = `<p>No timetable found.</p>`;
-      } else {
-        let html = `
-          <table class="timetable-grid">
-            <thead>
-              <tr>
-                <th>Batch</th>
-                <th>Division</th>
-                <th>Course</th>
-                <th>Day</th>
-                <th>Start</th>
-                <th>End</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
+      if (!facRes.ok || !courseRes.ok || !roomRes.ok || !slotRes.ok)
+        throw new Error("One of the endpoints returned an error");
 
-        data.forEach(entry => {
-          html += `
-            <tr>
-              <td>${entry.batch_name}</td>
-              <td>${entry.division_label}</td>
-              <td>${entry.course_name}</td>
-              <td>${entry.day_name}</td>
-              <td>${entry.start_time}</td>
-              <td>${entry.end_time}</td>
-            </tr>
-          `;
+      const [faculties, courses, rooms, slots] = await Promise.all([
+        facRes.json(),
+        courseRes.json(),
+        roomRes.json(),
+        slotRes.json()
+      ]);
+
+      console.log("✅ Data loaded:", { faculties, courses, rooms, slots });
+
+      // FACULTY
+      const fidSelects = [document.getElementById("faculty-select"), document.getElementById("fid")];
+      fidSelects.forEach(sel => {
+        sel.innerHTML = `<option value="">Select Faculty</option>`;
+        faculties.forEach(f => {
+          const opt = document.createElement("option");
+          opt.value = f.faculty_id;
+          opt.textContent = f.faculty_name;
+          sel.appendChild(opt);
         });
+      });
 
-        html += `</tbody></table>`;
-        facultyGrid.innerHTML = html;
-      }
+      // COURSES
+      const cidSelect = document.getElementById("cid");
+      cidSelect.innerHTML = `<option value="">Select Course</option>`;
+      courses.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.course_id;
+        opt.textContent = c.course_name;
+        cidSelect.appendChild(opt);
+      });
 
-      // Switch view
-      facultyFormContainer.classList.add("hidden");
-      facultyContainer.classList.remove("hidden");
+      // ROOMS
+      const ridSelect = document.getElementById("rid");
+      ridSelect.innerHTML = `<option value="">Select Room</option>`;
+      rooms.forEach(r => {
+        const opt = document.createElement("option");
+        opt.value = r.room_id;
+        opt.textContent = r.room_id;
+        ridSelect.appendChild(opt);
+      });
+
+      // TIME SLOTS
+      const tidSelect = document.getElementById("tid");
+      tidSelect.innerHTML = `<option value="">Select Time Slot</option>`;
+      slots.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.time_slot_id;
+        opt.textContent = `${t.start_time} - ${t.end_time}`;
+        tidSelect.appendChild(opt);
+      });
 
     } catch (err) {
-      console.error(err);
-      facultyGrid.innerHTML = `<p>Error loading timetable.</p>`;
+      console.error("❌ Failed to load faculty data:", err);
     }
-  });
+  }
+
+  loadFacultyData();
+
+  // FACULTY TIMETABLE FORM
+  document.getElementById("faculty-timetable-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const fid = document.getElementById("faculty-select").value;
+    const batch = document.getElementById("faculty-batch").value;
+    const year = document.getElementById("faculty-year").value;
+    const day = document.getElementById("faculty-day").value;
+    
+    const res = await fetch(`/v1/faculty/timetable?fid=${fid}&batch=${batch}&year=${year}&day=${day}`);
+    const data = await res.json();
+
+    const tbody = document.querySelector("#faculty-timetable-table tbody");
+    tbody.innerHTML = "";
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.course_name}</td>
+        <td>${row.division_label}</td>
+        <td>${row.day_name}</td>
+        <td>${row.batch_name}</td>
+        <td>${row.start_time}</td>
+        <td>${row.end_time}</td>`;
+      tbody.appendChild(tr);
+    });
+
+    facultyForm.classList.add("hidden");
+    facultyContainer.classList.remove("hidden");
+  };
+
+  document.getElementById("back-faculty-form").onclick = () => {
+    facultyContainer.classList.add("hidden");
+    facultyForm.classList.remove("hidden");
+  };
+
+  // SCHEDULE EXTRA CLASS
+  document.getElementById("extra-class").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const form = e.target; // your <form id="extra-class">
+    const data = new FormData(form); // collects all fields automatically
+    const params = new URLSearchParams(data); // turns FormData into query string
+
+    console.log("➡️ Params:", params.toString());
+
+    const res = await fetch(`/v1/faculty/extraClass?${params.toString()}`);
+    if (res.ok) alert("✅ Extra class scheduled!");
+    else alert("❌ Failed to schedule class");
+  };
+
 });

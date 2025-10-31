@@ -54,17 +54,26 @@ func main() {
         AllowedHeaders: []string{"Content-Type"},
     }))
 
+    
+    
+    // API routes
+    v1 := chi.NewRouter()
+    //handler lists
+    v1.Get("/faculty", apiCfg.handlerListFaculty)
+    v1.Get("/courses", apiCfg.handlerListCourses)
+    v1.Get("/rooms", apiCfg.handlerListRooms)
+    v1.Get("/timeSlots", apiCfg.handlerListTimeSlots)
+    //normal handlers
+    v1.Get("/timetable", apiCfg.handlerTimetableStudents)
+    v1.Get("/faculty/timetable", apiCfg.handlerTimetableFaculty)
+    v1.Get("/faculty/extraClass", apiCfg.handlerExtraClass)
+    
+    router.Mount("/v1", v1)
+
     // Serve frontend
     fs := http.FileServer(http.Dir("."))
     router.Handle("/*", fs)
-
-
-    // API routes
-    v1 := chi.NewRouter()
-    v1.Get("/timetable", apiCfg.handlerTimetableStudents)
-    v1.Get("/faculty/timetable", apiCfg.handlerTimetableFaculty)
-    router.Mount("/v1", v1)
-
+    
     log.Printf("Server running on port %s\n", port)
     http.ListenAndServe(":"+port, router)
 }
