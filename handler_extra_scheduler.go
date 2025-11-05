@@ -78,10 +78,94 @@ func (apiCfg *apiConfig) handlerExtraClass(w http.ResponseWriter, r *http.Reques
 		}
 	}
 
-	var divisionArg interface{} = nil
+	var divisionArg interface{}
 	if divisionID.Valid {
 		divisionArg = divisionID.Int64
+	} else {
+		divisionArg = nil
 	}
+
+	// assume fid, day, tid, dateStr are already parsed/validated above
+
+	// debug log of inputs
+	log.Printf("[DEBUG] Conflict check params: fid=%d, day=%d, time_slot=%d, class_date=%q", fid, day, tid, dateStr)
+
+	var fCount int
+	facultyConflict := `
+		SELECT COUNT(*) FROM (
+			SELECT faculty_id
+			FROM timetable
+			WHERE faculty_id = ? AND day_of_week = ? AND time_slot = ?
+			UNION ALL
+			SELECT faculty_id
+			FROM extra_classes
+			WHERE faculty_id = ? AND day_of_week = ? AND time_slot = ? AND class_date = ?
+		) AS conflicts;
+	`
+
+	err = apiCfg.DB.QueryRow(facultyConflict,
+		fid, day, tid,
+		fid, day, tid, dateStr,
+	).Scan(&fCount)
+
+	if err != nil {
+		// show exact SQL error and parameters
+		log.Printf("[ERROR] Faculty conflict query failed: %v", err)
+		respondWithError(w, 500, "Error checking faculty conflict: "+err.Error())
+		return
+	}
+
+	log.Printf("[DEBUG] Faculty conflict count = %d", fCount)
+	if fCount > 0 {
+		log.Printf("Faculty clash detected → fCount=%d", fCount)
+		respondWithError(w, 400, "Faculty already has a class at that time.")
+		return
+	}
+
+	var bCount int
+	err = apiCfg.DB.QueryRow(`
+		SELECT COUNT(*) FROM (
+			SELECT batch_id FROM timetable
+			WHERE batch_id = ? AND day_of_week = ? AND time_slot = ?
+			UNION ALL
+			SELECT batch_id FROM extra_classes
+			WHERE batch_id = ? AND day_of_week = ? AND time_slot = ? AND class_date = ?
+		) AS conflicts;
+	`, batchID, day, tid, batchID, day, tid, dateStr).Scan(&bCount)
+
+	if err != nil {
+		log.Println("Batch conflict query failed:", err)
+		respondWithError(w, 500, "Error checking batch conflict")
+		return
+	}
+
+	if bCount > 0 {
+		respondWithError(w, 400, "Batch already has a class at that time.")
+		return
+	}
+
+	var rCount int
+	err = apiCfg.DB.QueryRow(`
+		SELECT COUNT(*) FROM (
+			SELECT room_id FROM timetable
+			WHERE room_id = ? AND day_of_week = ? AND time_slot = ?
+			UNION ALL
+			SELECT room_id FROM extra_classes
+			WHERE room_id = ? AND day_of_week = ? AND time_slot = ? AND class_date = ?
+		) AS conflicts;
+	`, ridStr, day, tid, ridStr, day, tid, dateStr).Scan(&rCount)
+
+	if err != nil {
+		log.Println("Room conflict query failed:", err)
+		respondWithError(w, 500, "Error checking room conflict")
+		return
+	}
+
+	if rCount > 0 {
+		respondWithError(w, 400, "Room is already occupied at that time.")
+		return
+	}
+
 
 	query := `
 		INSERT INTO extra_classes

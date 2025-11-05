@@ -67,6 +67,9 @@ func main() {
     v1.Get("/timetable", apiCfg.handlerTimetableStudents)
     v1.Get("/faculty/timetable", apiCfg.handlerTimetableFaculty)
     v1.Get("/faculty/extraClass", apiCfg.handlerExtraClass)
+    v1.Get("/admin/createEntry", apiCfg.create_entry)
+    v1.Get("/admin/deleteEntry", apiCfg.delete_entry)
+    v1.Get("/admin/vacantRooms", apiCfg.handlerVacantRooms)
     
     router.Mount("/v1", v1)
 

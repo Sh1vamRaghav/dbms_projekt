@@ -22,11 +22,11 @@
       <h2>Students</h2>
       <div id="students-menu" class="menu visible">
         <button id="open-student-timetable" class="menu-item">📅 View Timetable</button>
-        <button class="menu-item">🏫 Find Vacant Room</button>
+        <button id="open-vacant-room" class="menu-item">🏫 Find Vacant Room</button>
       </div>
 
+      <!-- Student Timetable Form -->
       <div id="student-timetable-form" class="hidden">
-        <h3>Select Batch, Year, and Day</h3>
         <select id="student-batch" required>
           <option value="">Select Batch</option>
           <option value="CSE-A">CSE-A</option>
@@ -60,6 +60,7 @@
         </div>
       </div>
 
+      <!-- Student Timetable Display -->
       <div id="student-timetable-container" class="hidden">
         <h3>Your Timetable</h3>
         <table id="student-timetable-table">
@@ -76,6 +77,41 @@
           <tbody></tbody>
         </table>
         <button id="back-student-form" class="menu-item secondary">⬅ Back</button>
+      </div>
+
+      <!-- VACANT ROOM FORM -->
+      <div id="vacant-room-form" class="hidden">
+        <h3>Find Vacant Rooms</h3>
+        <form id="vacant-room">
+          <label>Day:</label>
+          <select id="vacant-day" name="day" required>
+            <option value="">Select Day</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+
+          <label>Time Slot:</label>
+          <select id="vacant-tid" name="tid" required></select>
+
+          <label>Date (optional):</label>
+          <input type="date" id="vacant-date" name="date" />
+
+          <div class="form-actions">
+            <button type="submit" class="menu-item">Search</button>
+            <button type="button" id="back-student-menu-vacant" class="menu-item secondary">⬅ Back</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- VACANT ROOM RESULTS -->
+      <div id="vacant-room-results" class="hidden">
+        <h3>Available Rooms</h3>
+        <ul id="vacant-room-list"></ul>
+        <button id="back-vacant-results" class="menu-item secondary">⬅ Back</button>
       </div>
     </section>
 
@@ -207,18 +243,139 @@
           </div>
         </form>
       </div>
-
     </section>
 
-    <!-- ADMIN -->
+    <!-- ADMIN SECTION -->
     <section id="admin" class="section">
       <h2>Admin</h2>
-      <p>Coming soon...</p>
+      <div id="admin-menu" class="menu visible">
+        <button id="open-create-class" class="menu-item">➕ Schedule Class</button>
+        <button id="open-delete-class" class="menu-item">🗑️ Delete Class</button>
+      </div>
+
+      <!-- CREATE CLASS FORM -->
+      <div id="create-class-form" class="hidden">
+        <h3>Schedule a Class</h3>
+        <form id="create-class">
+          <label>Term:</label>
+          <input type="number" id="term_id" name="term_id" placeholder="e.g. 1" required>
+
+          <label>Batch:</label>
+          <select id="batch_name" name="batch_name" required>
+            <option value="CSE-A">CSE-A</option>
+            <option value="CSE-B">CSE-B</option>
+            <option value="ECE-A">ECE-A</option>
+            <option value="ECE-B">ECE-B</option>
+            <option value="EE-A">EE-A</option>
+            <option value="EE-B">EE-B</option>
+          </select>
+
+          <label>Admission Year:</label>
+          <select id="admission_year" name="admission_year" required>
+            <option value="2025">1st</option>
+            <option value="2024">2nd</option>
+            <option value="2023">3rd</option>
+          </select>
+
+          <label>Division:</label>
+          <select id="division_label" name="division_label">
+            <option value="">Combined</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+          </select>
+
+          <label>Course:</label>
+          <select id="course_id" name="course_id" required></select>
+
+          <label>Faculty:</label>
+          <select id="faculty_id" name="faculty_id" required></select>
+
+          <label>Room:</label>
+          <select id="room_id" name="room_id" required></select>
+
+          <label>Day:</label>
+          <select id="day_of_week" name="day_of_week" required>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+
+          <label>Time Slot:</label>
+          <select id="time_slot" name="time_slot" required></select>
+
+          <div class="form-actions">
+            <button type="submit" class="menu-item">💾 Create</button>
+            <button type="button" id="back-admin-menu-create" class="menu-item secondary">⬅ Back</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- DELETE CLASS FORM -->
+      <div id="delete-class-form" class="hidden">
+        <h3>Delete a Class</h3>
+        <form id="delete-class">
+          <label>Term:</label>
+          <input type="number" id="del_term" name="term_id" placeholder="e.g. 1" required>
+
+          <label>Batch:</label>
+          <select id="del_batch" name="batch_name" required>
+            <option value="CSE-A">CSE-A</option>
+            <option value="CSE-B">CSE-B</option>
+            <option value="ECE-A">ECE-A</option>
+            <option value="ECE-B">ECE-B</option>
+            <option value="EE-A">EE-A</option>
+            <option value="EE-B">EE-B</option>
+          </select>
+
+          <label>Admission Year:</label>
+          <select id="del_year" name="admission_year" required>
+            <option value="2025">1st</option>
+            <option value="2024">2nd</option>
+            <option value="2023">3rd</option>
+          </select>
+
+          <label>Division:</label>
+          <select id="del_division" name="division_label">
+            <option value="">Combined</option>
+            <option value="B1">B1</option>
+            <option value="B2">B2</option>
+          </select>
+
+          <label>Course:</label>
+          <select id="del_course" name="course_id" required></select>
+
+          <label>Faculty:</label>
+          <select id="del_faculty" name="faculty_id" required></select>
+
+          <label>Room:</label>
+          <select id="del_room" name="room_id" required></select>
+
+          <label>Day:</label>
+          <select id="del_day" name="day_of_week" required>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+
+          <label>Time Slot:</label>
+          <select id="del_time" name="time_slot" required></select>
+
+          <div class="form-actions">
+            <button type="submit" class="menu-item danger">🗑️ Delete</button>
+            <button type="button" id="back-admin-menu-delete" class="menu-item secondary">⬅ Back</button>
+          </div>
+        </form>
+      </div>
     </section>
   </main>
 
   <footer><p>© 2025 Timely</p></footer>
-
   <script src="script.js"></script>
 </body>
 </html>
