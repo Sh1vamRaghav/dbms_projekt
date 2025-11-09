@@ -80,6 +80,7 @@
       </div>
 
       <!-- VACANT ROOM FORM -->
+      <!-- VACANT ROOM FORM -->
       <div id="vacant-room-form" class="hidden">
         <h3>Find Vacant Rooms</h3>
         <form id="vacant-room">
@@ -94,11 +95,11 @@
             <option value="6">Saturday</option>
           </select>
 
-          <label>Time Slot:</label>
-          <select id="vacant-tid" name="tid" required></select>
+          <label>Start Time Slot:</label>
+          <select id="vacant-start" name="start_tid" required></select>
 
-          <label>Date (optional):</label>
-          <input type="date" id="vacant-date" name="date" />
+          <label>End Time Slot:</label>
+          <select id="vacant-end" name="end_tid" required></select>
 
           <div class="form-actions">
             <button type="submit" class="menu-item">Search</button>
@@ -108,11 +109,22 @@
       </div>
 
       <!-- VACANT ROOM RESULTS -->
+      <!-- VACANT ROOM RESULTS -->
       <div id="vacant-room-results" class="hidden">
         <h3>Available Rooms</h3>
-        <ul id="vacant-room-list"></ul>
+        <table id="vacant-room-table">
+          <thead>
+            <tr>
+              <th>Room ID</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
         <button id="back-vacant-results" class="menu-item secondary">⬅ Back</button>
       </div>
+
+
     </section>
 
     <!-- FACULTY SECTION -->
